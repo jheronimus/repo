@@ -85,7 +85,8 @@ jobs:
             libfreeimage-dev libfreetype6-dev libgit2-dev \
             libcurl4-openssl-dev libpugixml-dev libasound2-dev \
             libbluetooth-dev libgl1-mesa-dev libpoppler-cpp-dev \
-            libvlc-dev libvlccore-dev
+            libvlc-dev libvlccore-dev \
+            file dpkg-dev
 
       - name: Clone ES-DE Source Code
         if: steps.check-version.outputs.build_needed == 'true'
