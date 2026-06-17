@@ -79,11 +79,13 @@ jobs:
         if: steps.check-version.outputs.build_needed == 'true'
         run: |
           apt-get install -y \
-            build-essential cmake \
-            libsdl2-dev libavcodec-dev libavfilter-dev libavformat-dev \
-            libavutil-dev libfreeimage-dev libfreetype6-dev \
+            build-essential cmake gettext \
+            libharfbuzz-dev libicu-dev libsdl2-dev \
+            libavcodec-dev libavfilter-dev libavformat-dev libavutil-dev \
+            libfreeimage-dev libfreetype6-dev libgit2-dev \
             libcurl4-openssl-dev libpugixml-dev libasound2-dev \
-            libgl1-mesa-dev libvlc-dev libvlccore-dev
+            libbluetooth-dev libgl1-mesa-dev libpoppler-cpp-dev \
+            libvlc-dev libvlccore-dev
 
       - name: Clone ES-DE Source Code
         if: steps.check-version.outputs.build_needed == 'true'
