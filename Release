@@ -5,10 +5,10 @@ Codename: trixie
 Architectures: amd64
 Components: main
 Description: Unofficial EmulationStation Desktop Edition repository for Debian Trixie
-Date: Wed, 17 Jun 2026 19:18:12 +0000
+Date: Wed, 17 Jun 2026 19:18:28 +0000
 MD5Sum:
- 2f8abf257020bbaac0ad91424b2fbd47 986 Packages
- cfe4fded64a12f49fb2f600ff5e6b95b 615 Packages.gz
+ 0622a7c2730dd05fc2af130e80d588de 986 Packages
+ 96ffbd75bf063bc6fa19407fdd6276fe 616 Packages.gz
 SHA256:
- ffecf09b39ffcc6641b102c027cc8ae6ac69cefa742b8c2929d33bda9f81e8ca 986 Packages
- 16f66ad2066af72665f1a5d6a492973be81b45e4dd04c3fcad2b49bc5cc4ecd7 615 Packages.gz
+ a8bf789a6ac9b4e08ff257df2e72d792b9bf819614507c4946709bc438807f2e 986 Packages
+ c0a76e354c87ba10311e1e4891b22edb15ce7db4ec90585bc7b73ce74aa1cbfc 616 Packages.gz
