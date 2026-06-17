@@ -5,10 +5,10 @@ Maintainer: Leon Styhre <leon.styhre@nw-soft.com>
 Installed-Size: 90027
 Depends: libasound2t64 (>= 1.0.16), libavcodec61 (>= 7:7.1.4), libavfilter10 (>= 7:7.1.4), libavformat61 (>= 7:7.1.4), libavutil59 (>= 7:7.1.4), libbluetooth3 (>= 4.91), libc6 (>= 2.38), libcurl4t64 (>= 7.68.0), libfreeimage3 (>= 3.18.0+ds2), libfreetype6 (>= 2.2.1), libgcc-s1 (>= 3.0), libgit2-1.9 (>= 1.9.0), libharfbuzz0b (>= 1.7.7), libicu76 (>= 76.1-1~), libopengl0, libpoppler-cpp2 (>= 25.03.0), libpugixml1v5 (>= 1.6), libsdl2-2.0-0 (>= 2.0.14), libstdc++6 (>= 14)
 Filename: ./es-de_3.4.1-x64.deb
-Size: 51125010
-MD5sum: 8c1d6f242be03b8d46b62207c24e7143
-SHA1: 166c5b62fdc99f3b13be9e5bf9528bc84f1701ea
-SHA256: 95f6af731dad29b030e09f28ff0a76c05718698ef5f4d0bdf7fbd8a21dc0783e
+Size: 51124918
+MD5sum: 9614e4055d22b09e30903b0273b1e22f
+SHA1: 7671a05c62cbaac51067245b0431812079e37d99
+SHA256: 2cc80e47398b7b6d36bde9b4952c1b75559deefb79b276653574431dfe373f11
 Section: games
 Priority: optional
 Homepage: https://es-de.org
