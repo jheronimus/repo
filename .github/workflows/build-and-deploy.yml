@@ -1,6 +1,9 @@
 name: Build and Deploy ES-DE APT Repo
 
 on:
+  push:
+    branches:
+      - main
   schedule:
     # Run weekly to check for updates
     - cron: '0 0 * * 0'
