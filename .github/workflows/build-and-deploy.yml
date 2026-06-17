@@ -1,0 +1,219 @@
+name: Build and Deploy ES-DE APT Repo
+
+on:
+  schedule:
+    # Run weekly to check for updates
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+    # Allow manual runs
+    inputs:
+      version:
+        description: 'Specific version to build (e.g., 3.4.1)'
+        required: false
+        default: ''
+      force_build:
+        description: 'Force compilation even if version hasn\'t changed'
+        required: false
+        default: 'false'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: debian:trixie
+    outputs:
+      version: ${{ steps.get-version.outputs.version }}
+      tag: ${{ steps.get-version.outputs.tag }}
+      build_needed: ${{ steps.check-version.outputs.build_needed }}
+    steps:
+      - name: Install Build Prerequisites
+        run: |
+          apt-get update && apt-get install -y \
+            git curl ca-certificates jq
+
+      - name: Get Target ES-DE Release Version
+        id: get-version
+        run: |
+          INPUT_VERSION="${{ github.event.inputs.version }}"
+          if [ -n "$INPUT_VERSION" ]; then
+            RAW_VERSION=$(echo "$INPUT_VERSION" | sed 's/^v//')
+            TAG="v$RAW_VERSION"
+          else
+            # Query GitLab API for the latest release tag
+            TAG=$(curl -s "https://gitlab.com/api/v4/projects/es-de%2Femulationstation-de/releases" | jq -r '.[0].tag_name')
+            RAW_VERSION=$(echo "$TAG" | sed 's/^v//')
+          fi
+          echo "version=$RAW_VERSION" >> $GITHUB_OUTPUT
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "Target ES-DE version is $RAW_VERSION (Tag: $TAG)"
+
+      - name: Check If Already Built
+        id: check-version
+        run: |
+          # Check if the deb file for this version already exists in our gh-pages repo
+          # We check the public url of the repo (or we can build anyway if forced)
+          REPO_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          DEB_FILE="emulationstation-de_${{ steps.get-version.outputs.version }}_amd64.deb"
+          
+          echo "Checking for $REPO_URL/$DEB_FILE"
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$REPO_URL/$DEB_FILE" || true)
+          
+          if [ "$HTTP_STATUS" = "200" ] && [ "${{ github.event.inputs.force_build }}" != "true" ]; then
+            echo "Version ${{ steps.get-version.outputs.version }} already exists in repo. Skipping build."
+            echo "build_needed=false" >> $GITHUB_OUTPUT
+          else
+            echo "Build needed."
+            echo "build_needed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Install Compilation Dependencies
+        if: steps.check-version.outputs.build_needed == 'true'
+        run: |
+          apt-get install -y \
+            build-essential cmake \
+            libsdl2-dev libavcodec-dev libavfilter-dev libavformat-dev \
+            libavutil-dev libfreeimage-dev libfreetype6-dev \
+            libcurl4-openssl-dev libpugixml-dev libasound2-dev \
+            libgl1-mesa-dev libvlc-dev libvlccore-dev
+
+      - name: Clone ES-DE Source Code
+        if: steps.check-version.outputs.build_needed == 'true'
+        run: |
+          git clone --depth 1 --branch ${{ steps.get-version.outputs.tag }} https://gitlab.com/es-de/emulationstation-de.git
+
+      - name: Compile ES-DE
+        if: steps.check-version.outputs.build_needed == 'true'
+        run: |
+          cd emulationstation-de
+          cmake -DCMAKE_BUILD_TYPE=Release .
+          make -j$(nproc)
+
+      - name: Generate Debian Package
+        if: steps.check-version.outputs.build_needed == 'true'
+        run: |
+          cd emulationstation-de
+          cpack -G DEB
+          # Move generated deb files to root level for easy pickup
+          mv *.deb ../
+
+      - name: Upload Debian Package Artifact
+        if: steps.check-version.outputs.build_needed == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: es-de-deb
+          path: '*.deb'
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: needs.build.outputs.build_needed == 'true'
+    container: debian:trixie
+    steps:
+      - name: Install Repository Management Tools
+        run: |
+          apt-get update && apt-get install -y \
+            git dpkg-dev gnupg ca-certificates
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          # Fetch all history so we can branch and push
+          fetch-depth: 0
+
+      - name: Prepare gh-pages Branch
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Create a temp dir for our new deb packages
+          mkdir -p /tmp/debs
+          
+      - name: Download Built Package Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: es-de-deb
+          path: /tmp/debs
+
+      - name: Save index.html from main
+        run: |
+          if [ -f index.html ]; then
+            cp index.html /tmp/index.html
+          else
+            echo "<h1>ES-DE Debian Trixie Repository</h1><p>Add this repository to your system to install ES-DE.</p>" > /tmp/index.html
+          fi
+
+      - name: Switch to gh-pages Branch
+        run: |
+          # Setup gh-pages branch or create it if not present
+          git fetch origin gh-pages || true
+          if git checkout gh-pages; then
+            echo "Checked out existing gh-pages branch"
+          else
+            git checkout --orphan gh-pages
+            git rm -rf .
+          fi
+          # Copy index.html back
+          cp /tmp/index.html index.html
+
+      - name: Add New Package and Update Index
+        run: |
+          # Copy the new deb files to the repo root
+          cp /tmp/debs/*.deb .
+          
+          # Scan for all packages in the repo
+          dpkg-scanpackages --multiversion . > Packages
+          gzip -c Packages > Packages.gz
+          
+          # Generate the Release file
+          cat <<EOF > Release
+          Origin: ES-DE Custom Repository
+          Label: ES-DE
+          Suite: stable
+          Codename: trixie
+          Architectures: amd64
+          Components: main
+          Description: Unofficial EmulationStation Desktop Edition repository for Debian Trixie
+          Date: $(date -Ru)
+          EOF
+          
+          # Compute hashes for Release metadata
+          echo "MD5Sum:" >> Release
+          for f in Packages Packages.gz; do
+            echo " $(md5sum $f | cut -d' ' -f1) $(stat -c%s $f) $f" >> Release
+          done
+          echo "SHA256:" >> Release
+          for f in Packages Packages.gz; do
+            echo " $(sha256sum $f | cut -d' ' -f1) $(stat -c%s $f) $f" >> Release
+          done
+
+      - name: Import GPG Key and Sign Repository
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+        run: |
+          # Import the private key
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          
+          # Find the Key ID of the imported key
+          KEY_ID=$(gpg --list-secret-keys --keyid-format LONG | grep sec | head -n 1 | awk '{print $2}' | cut -d'/' -f2)
+          echo "Using Key ID: $KEY_ID"
+          
+          # Export public key so users can easily download it
+          gpg --armor --export "$KEY_ID" > public.gpg
+          
+          # Sign the Release files
+          gpg --batch --yes --clearsign --digest-algo SHA256 --local-user "$KEY_ID" -o InRelease Release
+          gpg --batch --yes --detach-sign --digest-algo SHA256 --local-user "$KEY_ID" -o Release.gpg Release
+
+      - name: Commit and Push to gh-pages
+        run: |
+          git add *.deb Packages Packages.gz Release Release.gpg InRelease public.gpg index.html
+          git commit -m "Publish ES-DE version ${{ needs.build.outputs.version }}"
+          
+          # Authenticate git push using GITHUB_TOKEN
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git push origin gh-pages
