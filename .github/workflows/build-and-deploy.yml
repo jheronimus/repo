@@ -62,7 +62,7 @@ jobs:
           # Check if the deb file for this version already exists in our gh-pages repo
           # We check the public url of the repo (or we can build anyway if forced)
           REPO_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
-          DEB_FILE="emulationstation-de_${{ steps.get-version.outputs.version }}_amd64.deb"
+          DEB_FILE="es-de_${{ steps.get-version.outputs.version }}-x64.deb"
           
           echo "Checking for $REPO_URL/$DEB_FILE"
           HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$REPO_URL/$DEB_FILE" || true)

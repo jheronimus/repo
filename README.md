@@ -88,7 +88,7 @@ echo "deb [signed-by=/usr/share/keyrings/es-de-archive-keyring.gpg] https://<you
 
 # 3. Install
 sudo apt update
-sudo apt install emulationstation-de
+sudo apt install es-de
 ```
 
 ---
