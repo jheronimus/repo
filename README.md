@@ -84,7 +84,7 @@ Once your GitHub Pages site is live, users (or your own HTPC host) can install E
 sudo wget -O /usr/share/keyrings/es-de-archive-keyring.gpg https://<your-username>.github.io/<repo-name>/public.gpg
 
 # 2. Add the repository to sources.list
-echo "deb [signed-by=/usr/share/keyrings/es-de-archive-keyring.gpg] https://<your-username>.github.io/<repo-name>/ trixie main" | sudo tee /etc/apt/sources.list.d/es-de.list
+echo "deb [signed-by=/usr/share/keyrings/es-de-archive-keyring.gpg] https://<your-username>.github.io/<repo-name>/ ./" | sudo tee /etc/apt/sources.list.d/es-de.list
 
 # 3. Install
 sudo apt update
