@@ -1,0 +1,33 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+Origin: ES-DE Custom Repository
+Label: ES-DE
+Suite: stable
+Codename: trixie
+Architectures: amd64
+Components: main
+Description: Unofficial EmulationStation Desktop Edition repository for Debian Trixie
+Date: Wed, 17 Jun 2026 19:18:12 +0000
+MD5Sum:
+ 2f8abf257020bbaac0ad91424b2fbd47 986 Packages
+ cfe4fded64a12f49fb2f600ff5e6b95b 615 Packages.gz
+SHA256:
+ ffecf09b39ffcc6641b102c027cc8ae6ac69cefa742b8c2929d33bda9f81e8ca 986 Packages
+ 16f66ad2066af72665f1a5d6a492973be81b45e4dd04c3fcad2b49bc5cc4ecd7 615 Packages.gz
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE1kpmD5KzND/e7RQNB0RhM03RhdYFAmoy8vQACgkQB0RhM03R
+hdZ6TQ/+JK86alxlGwvAWCfCQqNKy45lN8aIpXyri4pRdZX2AA18js8jseXDmydM
+6slWfMPWB9WPT1afBaElaXtKIwCHUy8TU+jeoqieAkjbr4Bl2tsC6x/cBHyi2jhK
+uoUobOwdjjLawIIzHHyZffIc+0jjQXYivNFyB7MiFzKrHmk5ixTLpmZfl11lZ93f
+o/ZAmUgmCsDx0hNH3UMBY3wrgKlkmKn+NSC6q6LJtLF10xhbq4wsuE1+7qo0dGTO
+TuI5CR2N4gR1RLn7MFNc5r/j+XvxpQEtclKSJSvjMZk4E6FWfyxbI03/Q03FrHqa
+3enXmtbalNANbyn2TfV8fQGXirfmtlhMpK9XMw0s10mVALfsonUWiMkSCfLUg6rw
+7VC7InXCNug2ZGVEw3sq2kRH4NYYKMNALvUryNKIX+3Xx6z99vnB8l7DIwVLEod6
+ukh4zMZzpZZxtrlP4aJaEYLXLnh5BHehrT1GcsPlBfllPvEiKzztYdyPmILYXpik
+y6URptPOP825kbJska2e0I2xc9ZCTiizzlqwnh1mSmtRsdBJc1vuuYa5QT0FhNoR
+eSDFUPQOZMFNrfodD+mdk2pyQuzHKEdnp6gwD8QE0JzRQtrQo+M1JD0kAx2l+Ngy
+MeqjpFLipeaFhXEC8FRDedVAYaTma2e2namRKUvLzPz+Ynk1SW8=
+=gPhu
+-----END PGP SIGNATURE-----

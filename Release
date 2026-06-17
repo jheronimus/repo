@@ -1,0 +1,14 @@
+Origin: ES-DE Custom Repository
+Label: ES-DE
+Suite: stable
+Codename: trixie
+Architectures: amd64
+Components: main
+Description: Unofficial EmulationStation Desktop Edition repository for Debian Trixie
+Date: Wed, 17 Jun 2026 19:18:12 +0000
+MD5Sum:
+ 2f8abf257020bbaac0ad91424b2fbd47 986 Packages
+ cfe4fded64a12f49fb2f600ff5e6b95b 615 Packages.gz
+SHA256:
+ ffecf09b39ffcc6641b102c027cc8ae6ac69cefa742b8c2929d33bda9f81e8ca 986 Packages
+ 16f66ad2066af72665f1a5d6a492973be81b45e4dd04c3fcad2b49bc5cc4ecd7 615 Packages.gz
