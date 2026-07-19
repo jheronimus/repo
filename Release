@@ -1,14 +1,14 @@
-Origin: ES-DE Custom Repository
-Label: ES-DE
+Origin: jheronimus Custom Repository
+Label: jheronimus
 Suite: stable
 Codename: trixie
-Architectures: amd64
+Architectures: amd64 arm64
 Components: main
-Description: Unofficial EmulationStation Desktop Edition repository for Debian Trixie
-Date: Wed, 17 Jun 2026 19:25:11 +0000
+Description: Unofficial ES-DE and VacuumTube repository for Debian Trixie
+Date: Sun, 19 Jul 2026 19:07:23 +0000
 MD5Sum:
- d1bc428e02b4b4fad90129d711189d72 986 Packages
- f93316d2b12befd099f1a535e62f9798 617 Packages.gz
+ 5326061d0d426a1825a9a88840aa2e3b 3295 Packages
+ d596b585927d7e58262c2fb2463f8c07 1193 Packages.gz
 SHA256:
- 5248e7288cd1cf42d257718e15be203667a632d1a58537b95f05b4afa6e3a42e 986 Packages
- 89216b62696b8fadd7425cd2c54eb14754680bd50e048b5714e96c70cbc4cb4b 617 Packages.gz
+ 0d14b6dc222bc6022ae21f9604339a3e778b48c29df4f4b4b731aacb15789408 3295 Packages
+ 4cdd9115fd86c1e8d83d0bb7d203f5ea801d382fc289188087ee4822c84929c5 1193 Packages.gz

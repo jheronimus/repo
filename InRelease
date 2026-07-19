@@ -1,33 +1,33 @@
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA256
 
-Origin: ES-DE Custom Repository
-Label: ES-DE
+Origin: jheronimus Custom Repository
+Label: jheronimus
 Suite: stable
 Codename: trixie
-Architectures: amd64
+Architectures: amd64 arm64
 Components: main
-Description: Unofficial EmulationStation Desktop Edition repository for Debian Trixie
-Date: Wed, 17 Jun 2026 19:25:11 +0000
+Description: Unofficial ES-DE and VacuumTube repository for Debian Trixie
+Date: Sun, 19 Jul 2026 19:07:23 +0000
 MD5Sum:
- d1bc428e02b4b4fad90129d711189d72 986 Packages
- f93316d2b12befd099f1a535e62f9798 617 Packages.gz
+ 5326061d0d426a1825a9a88840aa2e3b 3295 Packages
+ d596b585927d7e58262c2fb2463f8c07 1193 Packages.gz
 SHA256:
- 5248e7288cd1cf42d257718e15be203667a632d1a58537b95f05b4afa6e3a42e 986 Packages
- 89216b62696b8fadd7425cd2c54eb14754680bd50e048b5714e96c70cbc4cb4b 617 Packages.gz
+ 0d14b6dc222bc6022ae21f9604339a3e778b48c29df4f4b4b731aacb15789408 3295 Packages
+ 4cdd9115fd86c1e8d83d0bb7d203f5ea801d382fc289188087ee4822c84929c5 1193 Packages.gz
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEE1kpmD5KzND/e7RQNB0RhM03RhdYFAmoy9JcACgkQB0RhM03R
-hdaDaxAAwSZs5Hlujo+5iHQQUsxVw60VimNiDtqggt4QctKShdirkrzWOisNQg2V
-UWxwd697a6s9bZnO9ol1GNqjwpLeEIbuHyMd122Mt9GQ5N6EO7WNmd3KgW7ofkgx
-w3IeUB2sMuOADc+Vcsy74sCRImvZi6oAoKAX1yUaQiaO9ZPbRWhAF70FGewuJKWE
-E8O5sOVXLn1TeQvilh/jcJQ4B17bXt37uPT7zEA1DmHHWNKI8n+WwbVmLj9IkKaY
-3DDjs2+hPvHHXioToCyZzLNANhYjrNlxEQgw9+HmA7eAjzwvSqPxrP3aV18oWcKU
-Q6kBisX2K9sWMltMSJjtdsBDzfPD1XF4t84TU0HY+zQ7zT/Z2TVn72oGI8hU9TRv
-m0k3EA8FndyBTI3/fa75rep+Id3L5+Dc973TA+FwUS1ojn4SwtIUAkar3spFc0Wq
-et5Nsvwc6RU3uR8HozHoYtNrvWv7HVmWwupxvJy6n6xNBgRwCAPJbGe6PG+sQED9
-9iV5lhL/47HCMsY7Uv1YxgUPuE84uI5SbigsW53XVXjXdhu9nLlwMEMHmUcGkAVK
-pCankUXF/DHRwLS7y2PMxpZu+HmQmmelBhsCMzfbSKCOJF0qqYJnrIBGvhLkDlug
-XwvL8YeBar9AfS/RMbxG81kfFGVnhTY2Isde5VG82MOHjAiEnfg=
-=0D+Q
+iQIzBAEBCAAdFiEE1kpmD5KzND/e7RQNB0RhM03RhdYFAmpdIGsACgkQB0RhM03R
+hdYY5g/9E3I6qwD950NcC9GmjQSVxVAzCm1MvOoTvSqDU6NZ+ik49AfsAI39g6xw
+2ssUC+cag3SXHJMgdifItbfQV++X3sappN85A/q4xdLHJmGRmU7/jJHvVwJH/qkw
+TThcJjItbgHCBLBcJWozBw4uAu3zhdM/v3MP9QVITK97qr29Mr9Y7TFvONZY97BI
+hijZ+f3qc+E7eFgYyANMr1ZmF3LXK9ShZ45tn8k7wyD/fKqIsWnSEpw0AJRvEwVt
+apaogkshTKtxEfY/UiDeUUApsrRtf2CLkRNTFKBhkmNFIUG6IS5Q7nUzk1gs15Jr
+D9eBjjfNI85MLRjnq6CmiBd+04AKGRHQBp7CaOdvk7nxBRTi7iNMaHBQsAEJU2CK
+L9NiLpO+w3Kx3fqOz9J9a4uOxIWnKNdkJ5wqtsRewh5ba5h9cE/y2BboiNvKfG/Z
+W3hs92INSRBrV/Wz8z9Q4dNVsji6b32AbqGa6W9huIIKVMgcFhqPF1yzBy+/r+C/
+DVjzv5NeQxJQk+BlCinMumbY7PoAeVZBnuePoRr+ICETQJjS2FhP0cgITosqEfWL
+MKTDgGKbM5y3n99r1PrHlYADiWhTkzywzcQn8fUB3pF7D12YAk3mIuUT2ou9CxDj
+bI1pYgDXFBWXjzr/oAuvpLxPiYLoRIglpu4+U7knAvUlI86YEjI=
+=cKdQ
 -----END PGP SIGNATURE-----

@@ -1,5 +1,22 @@
 Package: es-de
 Version: 3.4.1
+Architecture: arm64
+Maintainer: Leon Styhre <leon.styhre@nw-soft.com>
+Installed-Size: 88963
+Depends: libasound2t64 (>= 1.0.16), libavcodec61 (>= 7:7.1.5), libavfilter10 (>= 7:7.1.5), libavformat61 (>= 7:7.1.5), libavutil59 (>= 7:7.1.5), libbluetooth3 (>= 4.91), libc6 (>= 2.38), libcurl4t64 (>= 7.68.0), libfreeimage3 (>= 3.18.0+ds2), libfreetype6 (>= 2.2.1), libgcc-s1 (>= 3.0), libgit2-1.9 (>= 1.9.0), libharfbuzz0b (>= 1.7.7), libicu76 (>= 76.1-1~), libopengl0, libpoppler-cpp2 (>= 25.03.0), libpugixml1v5 (>= 1.6), libsdl2-2.0-0 (>= 2.0.14), libstdc++6 (>= 14)
+Filename: ./es-de_3.4.1-aarch64.deb
+Size: 50723580
+MD5sum: fee251ef362bf098d1777b88140acdfe
+SHA1: 6e8ba52866926efc53e0b2bf6c4ed6c7f1785328
+SHA256: f9f403230c03ff0a2fc39631f232e7ee68c556637bf3d6750e977170d66903b9
+Section: games
+Priority: optional
+Homepage: https://es-de.org
+Description: Gaming frontend
+ ES-DE is a frontend for browsing and launching games from your multi-platform collection.
+
+Package: es-de
+Version: 3.4.1
 Architecture: amd64
 Maintainer: Leon Styhre <leon.styhre@nw-soft.com>
 Installed-Size: 90027
@@ -14,4 +31,44 @@ Priority: optional
 Homepage: https://es-de.org
 Description: Gaming frontend
  ES-DE is a frontend for browsing and launching games from your multi-platform collection.
+
+Package: vacuumtube
+Version: 1.8.1
+Architecture: arm64
+Maintainer: shy@shy.rocks
+Installed-Size: 322491
+Depends: libgtk-3-0, libnotify4, libnss3, libxss1, libxtst6, xdg-utils, libatspi2.0-0, libuuid1, libsecret-1-0
+Recommends: libappindicator3-1
+Filename: ./vacuumtube_1.8.1_arm64.deb
+Size: 94004792
+MD5sum: b9a0231e3ad1654275a08175571f9fe9
+SHA1: 96165f7b9314ac325a3dcd9397ea4b91b5a7d334
+SHA256: 7c2b6df9babe8d5ca242dd5c936cfd0a4aac8ad45018164c7e9ec8a706b2823f
+Section: default
+Priority: optional
+Homepage: https://github.com/shy1132/VacuumTube
+Description: Watch and explore videos on YouTube
+  YouTube for TV, on your PC
+License: MIT
+Vendor: shy@shy.rocks
+
+Package: vacuumtube
+Version: 1.8.1
+Architecture: amd64
+Maintainer: shy@shy.rocks
+Installed-Size: 323647
+Depends: libgtk-3-0, libnotify4, libnss3, libxss1, libxtst6, xdg-utils, libatspi2.0-0, libuuid1, libsecret-1-0
+Recommends: libappindicator3-1
+Filename: ./vacuumtube_1.8.1_amd64.deb
+Size: 100646564
+MD5sum: f1a7849a4d4d268125e88ae25ba5cab9
+SHA1: 81c4af0edd3f9ce456e3efb049c2e4247abe7983
+SHA256: 652be4e29e85ed31d3a1bae4dad00e6d39967ad0cf7cc47547b0ec94bacd0d51
+Section: default
+Priority: optional
+Homepage: https://github.com/shy1132/VacuumTube
+Description: Watch and explore videos on YouTube
+  YouTube for TV, on your PC
+License: MIT
+Vendor: shy@shy.rocks
 
