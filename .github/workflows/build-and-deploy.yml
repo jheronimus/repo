@@ -1,22 +1,26 @@
-name: Build and Deploy ES-DE APT Repo
+name: Build and Deploy APT Repo
 
 on:
   push:
     branches:
       - main
   schedule:
-    # Run weekly to check for updates
+    # Run weekly to check for updates (Sunday midnight UTC)
     - cron: '0 0 * * 0'
   workflow_dispatch:
-    # Allow manual runs
     inputs:
-      version:
-        description: 'Specific version to build (e.g., 3.4.1)'
+      esde_version:
+        description: 'Specific ES-DE version to build (e.g., 3.4.1). Leave blank for latest.'
+        required: false
+        type: string
+        default: ''
+      vacuumtube_version:
+        description: 'Specific VacuumTube version to fetch (e.g., 1.8.1). Leave blank for latest.'
         required: false
         type: string
         default: ''
       force_build:
-        description: "Force compilation even if version hasn't changed"
+        description: "Force build/fetch even if versions haven't changed"
         required: false
         type: boolean
         default: false
@@ -27,7 +31,10 @@ permissions:
   id-token: write
 
 jobs:
-  build:
+  # ─────────────────────────────────────────────────────────────
+  # ES-DE: build for amd64
+  # ─────────────────────────────────────────────────────────────
+  build-esde-amd64:
     runs-on: ubuntu-latest
     container: debian:trixie
     outputs:
@@ -43,35 +50,28 @@ jobs:
       - name: Get Target ES-DE Release Version
         id: get-version
         run: |
-          INPUT_VERSION="${{ github.event.inputs.version }}"
+          INPUT_VERSION="${{ github.event.inputs.esde_version }}"
           if [ -n "$INPUT_VERSION" ]; then
             RAW_VERSION=$(echo "$INPUT_VERSION" | sed 's/^v//')
             TAG="v$RAW_VERSION"
           else
-            # Query GitLab API for the latest release tag
             TAG=$(curl -s "https://gitlab.com/api/v4/projects/es-de%2Femulationstation-de/releases" | jq -r '.[0].tag_name')
             RAW_VERSION=$(echo "$TAG" | sed 's/^v//')
           fi
           echo "version=$RAW_VERSION" >> $GITHUB_OUTPUT
           echo "tag=$TAG" >> $GITHUB_OUTPUT
-          echo "Target ES-DE version is $RAW_VERSION (Tag: $TAG)"
+          echo "Target ES-DE version: $RAW_VERSION ($TAG)"
 
       - name: Check If Already Built
         id: check-version
         run: |
-          # Check if the deb file for this version already exists in our gh-pages repo
-          # We check the public url of the repo (or we can build anyway if forced)
           REPO_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
           DEB_FILE="es-de_${{ steps.get-version.outputs.version }}-x64.deb"
-          
-          echo "Checking for $REPO_URL/$DEB_FILE"
           HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$REPO_URL/$DEB_FILE" || true)
-          
           if [ "$HTTP_STATUS" = "200" ] && [ "${{ github.event.inputs.force_build }}" != "true" ]; then
-            echo "Version ${{ steps.get-version.outputs.version }} already exists in repo. Skipping build."
+            echo "Version ${{ steps.get-version.outputs.version }} already exists. Skipping."
             echo "build_needed=false" >> $GITHUB_OUTPUT
           else
-            echo "Build needed."
             echo "build_needed=true" >> $GITHUB_OUTPUT
           fi
 
@@ -88,37 +88,187 @@ jobs:
             libvlc-dev libvlccore-dev \
             file dpkg-dev
 
-      - name: Clone ES-DE Source Code
+      - name: Clone ES-DE Source
         if: steps.check-version.outputs.build_needed == 'true'
         run: |
-          git clone --depth 1 --branch ${{ steps.get-version.outputs.tag }} https://gitlab.com/es-de/emulationstation-de.git
+          git clone --depth 1 --branch ${{ steps.get-version.outputs.tag }} \
+            https://gitlab.com/es-de/emulationstation-de.git
 
-      - name: Compile ES-DE
+      - name: Compile ES-DE (amd64)
         if: steps.check-version.outputs.build_needed == 'true'
         run: |
           cd emulationstation-de
           cmake -DCMAKE_BUILD_TYPE=Release .
           make -j$(nproc)
 
-      - name: Generate Debian Package
+      - name: Generate Debian Package (amd64)
         if: steps.check-version.outputs.build_needed == 'true'
         run: |
           cd emulationstation-de
           cpack -G DEB
-          # Move generated deb files to root level for easy pickup
           mv *.deb ../
 
-      - name: Upload Debian Package Artifact
+      - name: Upload amd64 Artifact
         if: steps.check-version.outputs.build_needed == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: es-de-deb
+          name: es-de-amd64-deb
           path: '*.deb'
 
+  # ─────────────────────────────────────────────────────────────
+  # ES-DE: build for arm64
+  # ─────────────────────────────────────────────────────────────
+  build-esde-arm64:
+    runs-on: ubuntu-latest
+    outputs:
+      build_needed: ${{ steps.check-version.outputs.build_needed }}
+    steps:
+      - name: Install Prerequisites
+        run: |
+          sudo apt-get update && sudo apt-get install -y \
+            curl ca-certificates jq
+
+      - name: Get Target ES-DE Release Version
+        id: get-version
+        run: |
+          INPUT_VERSION="${{ github.event.inputs.esde_version }}"
+          if [ -n "$INPUT_VERSION" ]; then
+            RAW_VERSION=$(echo "$INPUT_VERSION" | sed 's/^v//')
+            TAG="v$RAW_VERSION"
+          else
+            TAG=$(curl -s "https://gitlab.com/api/v4/projects/es-de%2Femulationstation-de/releases" | jq -r '.[0].tag_name')
+            RAW_VERSION=$(echo "$TAG" | sed 's/^v//')
+          fi
+          echo "version=$RAW_VERSION" >> $GITHUB_OUTPUT
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "Target ES-DE version: $RAW_VERSION ($TAG)"
+
+      - name: Check If Already Built
+        id: check-version
+        run: |
+          REPO_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          DEB_FILE="es-de_${{ steps.get-version.outputs.version }}-arm64.deb"
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$REPO_URL/$DEB_FILE" || true)
+          if [ "$HTTP_STATUS" = "200" ] && [ "${{ github.event.inputs.force_build }}" != "true" ]; then
+            echo "arm64 version ${{ steps.get-version.outputs.version }} already exists. Skipping."
+            echo "build_needed=false" >> $GITHUB_OUTPUT
+          else
+            echo "build_needed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set up QEMU for arm64 emulation
+        if: steps.check-version.outputs.build_needed == 'true'
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+
+      - name: Build ES-DE arm64 in Docker
+        if: steps.check-version.outputs.build_needed == 'true'
+        run: |
+          docker run --rm --platform linux/arm64 \
+            -v "${{ github.workspace }}:/workspace" \
+            debian:trixie bash -c "
+              set -e
+              apt-get update && apt-get install -y \
+                git curl ca-certificates jq \
+                build-essential cmake gettext \
+                libharfbuzz-dev libicu-dev libsdl2-dev \
+                libavcodec-dev libavfilter-dev libavformat-dev libavutil-dev \
+                libfreeimage-dev libfreetype6-dev libgit2-dev \
+                libcurl4-openssl-dev libpugixml-dev libasound2-dev \
+                libbluetooth-dev libgl1-mesa-dev libpoppler-cpp-dev \
+                libvlc-dev libvlccore-dev file dpkg-dev
+
+              git clone --depth 1 --branch ${{ steps.get-version.outputs.tag }} \
+                https://gitlab.com/es-de/emulationstation-de.git /build/esde
+              cd /build/esde
+              cmake -DCMAKE_BUILD_TYPE=Release .
+              make -j\$(nproc)
+              cpack -G DEB
+              cp *.deb /workspace/
+            "
+
+      - name: Upload arm64 Artifact
+        if: steps.check-version.outputs.build_needed == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: es-de-arm64-deb
+          path: '${{ github.workspace }}/*.deb'
+
+  # ─────────────────────────────────────────────────────────────
+  # VacuumTube: mirror upstream debs (amd64 + arm64)
+  # Upstream already builds both — we just repackage into our repo.
+  # ─────────────────────────────────────────────────────────────
+  fetch-vacuumtube:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get-version.outputs.version }}
+      fetch_needed: ${{ steps.check-version.outputs.fetch_needed }}
+    steps:
+      - name: Install Prerequisites
+        run: |
+          sudo apt-get update && sudo apt-get install -y curl jq ca-certificates
+
+      - name: Get Target VacuumTube Release Version
+        id: get-version
+        run: |
+          INPUT_VERSION="${{ github.event.inputs.vacuumtube_version }}"
+          if [ -n "$INPUT_VERSION" ]; then
+            RAW_VERSION=$(echo "$INPUT_VERSION" | sed 's/^v//')
+          else
+            RAW_VERSION=$(curl -s "https://api.github.com/repos/shy1132/VacuumTube/releases/latest" \
+              | jq -r '.tag_name' | sed 's/^v//')
+          fi
+          echo "version=$RAW_VERSION" >> $GITHUB_OUTPUT
+          echo "Target VacuumTube version: $RAW_VERSION"
+
+      - name: Check If Already Fetched
+        id: check-version
+        run: |
+          REPO_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          DEB_FILE="vacuumtube_${{ steps.get-version.outputs.version }}_amd64.deb"
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$REPO_URL/$DEB_FILE" || true)
+          if [ "$HTTP_STATUS" = "200" ] && [ "${{ github.event.inputs.force_build }}" != "true" ]; then
+            echo "VacuumTube ${{ steps.get-version.outputs.version }} already in repo. Skipping."
+            echo "fetch_needed=false" >> $GITHUB_OUTPUT
+          else
+            echo "fetch_needed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Download VacuumTube Debian Packages
+        if: steps.check-version.outputs.fetch_needed == 'true'
+        run: |
+          VERSION="${{ steps.get-version.outputs.version }}"
+          BASE="https://github.com/shy1132/VacuumTube/releases/download/v${VERSION}"
+
+          # amd64 — upstream name is VacuumTube-amd64.deb
+          curl -fL "${BASE}/VacuumTube-amd64.deb" -o "vacuumtube_${VERSION}_amd64.deb"
+
+          # arm64 — upstream name is VacuumTube-arm64.deb
+          curl -fL "${BASE}/VacuumTube-arm64.deb" -o "vacuumtube_${VERSION}_arm64.deb"
+
+          ls -lh *.deb
+
+      - name: Upload VacuumTube Artifacts
+        if: steps.check-version.outputs.fetch_needed == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: vacuumtube-debs
+          path: '*.deb'
+
+  # ─────────────────────────────────────────────────────────────
+  # Deploy: collect all debs and publish APT repo to gh-pages
+  # ─────────────────────────────────────────────────────────────
   deploy:
     runs-on: ubuntu-latest
-    needs: build
-    if: needs.build.outputs.build_needed == 'true'
+    needs:
+      - build-esde-amd64
+      - build-esde-arm64
+      - fetch-vacuumtube
+    if: |
+      needs.build-esde-amd64.outputs.build_needed == 'true' ||
+      needs.build-esde-arm64.outputs.build_needed == 'true' ||
+      needs.fetch-vacuumtube.outputs.fetch_needed == 'true'
     container: debian:trixie
     steps:
       - name: Install Repository Management Tools
@@ -129,22 +279,34 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          # Fetch all history so we can branch and push
           fetch-depth: 0
 
-      - name: Prepare gh-pages Branch
+      - name: Prepare Staging Directory
         run: |
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # Create a temp dir for our new deb packages
           mkdir -p /tmp/debs
-          
-      - name: Download Built Package Artifact
+
+      - name: Download ES-DE amd64 Package
+        if: needs.build-esde-amd64.outputs.build_needed == 'true'
         uses: actions/download-artifact@v4
         with:
-          name: es-de-deb
+          name: es-de-amd64-deb
+          path: /tmp/debs
+
+      - name: Download ES-DE arm64 Package
+        if: needs.build-esde-arm64.outputs.build_needed == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: es-de-arm64-deb
+          path: /tmp/debs
+
+      - name: Download VacuumTube Packages
+        if: needs.fetch-vacuumtube.outputs.fetch_needed == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: vacuumtube-debs
           path: /tmp/debs
 
       - name: Save index.html from main
@@ -152,12 +314,11 @@ jobs:
           if [ -f index.html ]; then
             cp index.html /tmp/index.html
           else
-            echo "<h1>ES-DE Debian Trixie Repository</h1><p>Add this repository to your system to install ES-DE.</p>" > /tmp/index.html
+            echo "<h1>APT Repository</h1><p>Packages: ES-DE, VacuumTube</p>" > /tmp/index.html
           fi
 
       - name: Switch to gh-pages Branch
         run: |
-          # Setup gh-pages branch or create it if not present
           git fetch origin gh-pages || true
           if git checkout gh-pages; then
             echo "Checked out existing gh-pages branch"
@@ -165,31 +326,27 @@ jobs:
             git checkout --orphan gh-pages
             git rm -rf .
           fi
-          # Copy index.html back
           cp /tmp/index.html index.html
 
-      - name: Add New Package and Update Index
+      - name: Add New Packages and Update APT Index
         run: |
-          # Copy the new deb files to the repo root
-          cp /tmp/debs/*.deb .
-          
-          # Scan for all packages in the repo
+          cp /tmp/debs/*.deb . 2>/dev/null || true
+
+          # Scan all packages — dpkg-scanpackages handles mixed architectures
           dpkg-scanpackages --multiversion . > Packages
           gzip -c Packages > Packages.gz
-          
-          # Generate the Release file
+
           cat <<EOF > Release
-          Origin: ES-DE Custom Repository
-          Label: ES-DE
+          Origin: jheronimus Custom Repository
+          Label: jheronimus
           Suite: stable
           Codename: trixie
-          Architectures: amd64
+          Architectures: amd64 arm64
           Components: main
-          Description: Unofficial EmulationStation Desktop Edition repository for Debian Trixie
+          Description: Unofficial ES-DE and VacuumTube repository for Debian Trixie
           Date: $(date -Ru)
           EOF
-          
-          # Compute hashes for Release metadata
+
           echo "MD5Sum:" >> Release
           for f in Packages Packages.gz; do
             echo " $(md5sum $f | cut -d' ' -f1) $(stat -c%s $f) $f" >> Release
@@ -203,25 +360,21 @@ jobs:
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
         run: |
-          # Import the private key
           echo "$GPG_PRIVATE_KEY" | gpg --batch --import
-          
-          # Find the Key ID of the imported key
           KEY_ID=$(gpg --list-secret-keys --keyid-format LONG | grep sec | head -n 1 | awk '{print $2}' | cut -d'/' -f2)
           echo "Using Key ID: $KEY_ID"
-          
-          # Export public key so users can easily download it
           gpg --armor --export "$KEY_ID" > public.gpg
-          
-          # Sign the Release files
           gpg --batch --yes --clearsign --digest-algo SHA256 --local-user "$KEY_ID" -o InRelease Release
           gpg --batch --yes --detach-sign --digest-algo SHA256 --local-user "$KEY_ID" -o Release.gpg Release
 
       - name: Commit and Push to gh-pages
         run: |
           git add *.deb Packages Packages.gz Release Release.gpg InRelease public.gpg index.html
-          git commit -m "Publish ES-DE version ${{ needs.build.outputs.version }}"
-          
-          # Authenticate git push using GITHUB_TOKEN
+          git diff --cached --quiet && echo "Nothing to commit" && exit 0
+
+          ESDE_VER="${{ needs.build-esde-amd64.outputs.version }}"
+          VT_VER="${{ needs.fetch-vacuumtube.outputs.version }}"
+          git commit -m "Publish ES-DE ${ESDE_VER}, VacuumTube ${VT_VER}"
+
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           git push origin gh-pages
