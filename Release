@@ -4,11 +4,11 @@ Suite: stable
 Codename: trixie
 Architectures: amd64 arm64
 Components: main
-Description: Unofficial ES-DE and VacuumTube repository for Debian Trixie
-Date: Sun, 19 Jul 2026 19:07:23 +0000
+Description: Unofficial ES-DE, VacuumTube, and umu-launcher repository for Debian Trixie
+Date: Fri, 24 Jul 2026 18:19:46 +0000
 MD5Sum:
- 5326061d0d426a1825a9a88840aa2e3b 3295 Packages
- d596b585927d7e58262c2fb2463f8c07 1193 Packages.gz
+ a4760041339e7c08b3f0f0228e594c5c 5959 Packages
+ 6692f1583d0cc8bc6b3975d3edf0be56 2030 Packages.gz
 SHA256:
- 0d14b6dc222bc6022ae21f9604339a3e778b48c29df4f4b4b731aacb15789408 3295 Packages
- 4cdd9115fd86c1e8d83d0bb7d203f5ea801d382fc289188087ee4822c84929c5 1193 Packages.gz
+ 1c056cf192ec2ee337c1bafc5837256057826b7f12d2dc0f1082ff7f5bf104e6 5959 Packages
+ 9afd6dd2d221b3499ee1a90fdec0a87787baeb9196870ebbfc98fcfac17edf2e 2030 Packages.gz
