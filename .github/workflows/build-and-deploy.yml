@@ -19,6 +19,11 @@ on:
         required: false
         type: string
         default: ''
+      umu_launcher_version:
+        description: 'Specific umu-launcher version to fetch (e.g., 1.4.1). Leave blank for latest.'
+        required: false
+        type: string
+        default: ''
       force_build:
         description: "Force build/fetch even if versions haven't changed"
         required: false
@@ -257,6 +262,64 @@ jobs:
           path: '*.deb'
 
   # ─────────────────────────────────────────────────────────────
+  # umu-launcher: mirror upstream Debian 13 debs
+  # ─────────────────────────────────────────────────────────────
+  fetch-umu-launcher:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get-version.outputs.version }}
+      fetch_needed: ${{ steps.check-version.outputs.fetch_needed }}
+    steps:
+      - name: Install Prerequisites
+        run: |
+          sudo apt-get update && sudo apt-get install -y curl jq ca-certificates
+
+      - name: Get Target umu-launcher Release Version
+        id: get-version
+        run: |
+          INPUT_VERSION="${{ github.event.inputs.umu_launcher_version }}"
+          if [ -n "$INPUT_VERSION" ]; then
+            RAW_VERSION=$(echo "$INPUT_VERSION" | sed 's/^v//')
+          else
+            RAW_VERSION=$(curl -s "https://api.github.com/repos/Open-Wine-Components/umu-launcher/releases/latest" \
+              | jq -r '.tag_name' | sed 's/^v//')
+          fi
+          echo "version=$RAW_VERSION" >> $GITHUB_OUTPUT
+          echo "Target umu-launcher version: $RAW_VERSION"
+
+      - name: Check If Already Fetched
+        id: check-version
+        run: |
+          REPO_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          DEB_FILE="umu-launcher_${{ steps.get-version.outputs.version }}-1_all_debian-13.deb"
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$REPO_URL/$DEB_FILE" || true)
+          if [ "$HTTP_STATUS" = "200" ] && [ "${{ github.event.inputs.force_build }}" != "true" ]; then
+            echo "umu-launcher ${{ steps.get-version.outputs.version }} already in repo. Skipping."
+            echo "fetch_needed=false" >> $GITHUB_OUTPUT
+          else
+            echo "fetch_needed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Download umu-launcher Debian Packages
+        if: steps.check-version.outputs.fetch_needed == 'true'
+        run: |
+          VERSION="${{ steps.get-version.outputs.version }}"
+          BASE="https://github.com/Open-Wine-Components/umu-launcher/releases/download/${VERSION}"
+
+          curl -fL "${BASE}/umu-launcher_${VERSION}-1_all_debian-13.deb" -o "umu-launcher_${VERSION}-1_all_debian-13.deb"
+          curl -fL "${BASE}/python3-umu-launcher_${VERSION}-1_amd64_debian-13.deb" -o "python3-umu-launcher_${VERSION}-1_amd64_debian-13.deb"
+          curl -fL "${BASE}/python3-umu-launcher_${VERSION}-1_arm64_debian-13.deb" -o "python3-umu-launcher_${VERSION}-1_arm64_debian-13.deb"
+
+          ls -lh *.deb
+
+      - name: Upload umu-launcher Artifacts
+        if: steps.check-version.outputs.fetch_needed == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: umu-launcher-debs
+          path: '*.deb'
+
+  # ─────────────────────────────────────────────────────────────
   # Deploy: collect all debs and publish APT repo to gh-pages
   # ─────────────────────────────────────────────────────────────
   deploy:
@@ -265,10 +328,12 @@ jobs:
       - build-esde-amd64
       - build-esde-arm64
       - fetch-vacuumtube
+      - fetch-umu-launcher
     if: |
       needs.build-esde-amd64.outputs.build_needed == 'true' ||
       needs.build-esde-arm64.outputs.build_needed == 'true' ||
-      needs.fetch-vacuumtube.outputs.fetch_needed == 'true'
+      needs.fetch-vacuumtube.outputs.fetch_needed == 'true' ||
+      needs.fetch-umu-launcher.outputs.fetch_needed == 'true'
     container: debian:trixie
     steps:
       - name: Install Repository Management Tools
@@ -309,12 +374,19 @@ jobs:
           name: vacuumtube-debs
           path: /tmp/debs
 
+      - name: Download umu-launcher Packages
+        if: needs.fetch-umu-launcher.outputs.fetch_needed == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: umu-launcher-debs
+          path: /tmp/debs
+
       - name: Save index.html from main
         run: |
           if [ -f index.html ]; then
             cp index.html /tmp/index.html
           else
-            echo "<h1>APT Repository</h1><p>Packages: ES-DE, VacuumTube</p>" > /tmp/index.html
+            echo "<h1>APT Repository</h1><p>Packages: ES-DE, VacuumTube, umu-launcher</p>" > /tmp/index.html
           fi
 
       - name: Switch to gh-pages Branch
@@ -343,7 +415,7 @@ jobs:
           Codename: trixie
           Architectures: amd64 arm64
           Components: main
-          Description: Unofficial ES-DE and VacuumTube repository for Debian Trixie
+          Description: Unofficial ES-DE, VacuumTube, and umu-launcher repository for Debian Trixie
           Date: $(date -Ru)
           EOF
 
@@ -374,7 +446,9 @@ jobs:
 
           ESDE_VER="${{ needs.build-esde-amd64.outputs.version }}"
           VT_VER="${{ needs.fetch-vacuumtube.outputs.version }}"
-          git commit -m "Publish ES-DE ${ESDE_VER}, VacuumTube ${VT_VER}"
+          UMU_VER="${{ needs.fetch-umu-launcher.outputs.version }}"
+          git commit -m "Publish ES-DE ${ESDE_VER}, VacuumTube ${VT_VER}, umu-launcher ${UMU_VER}"
 
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           git push origin gh-pages
+
