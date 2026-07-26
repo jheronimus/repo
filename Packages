@@ -22,10 +22,10 @@ Maintainer: Leon Styhre <leon.styhre@nw-soft.com>
 Installed-Size: 88963
 Depends: libasound2t64 (>= 1.0.16), libavcodec61 (>= 7:7.1.5), libavfilter10 (>= 7:7.1.5), libavformat61 (>= 7:7.1.5), libavutil59 (>= 7:7.1.5), libbluetooth3 (>= 4.91), libc6 (>= 2.38), libcurl4t64 (>= 7.68.0), libfreeimage3 (>= 3.18.0+ds2), libfreetype6 (>= 2.2.1), libgcc-s1 (>= 3.0), libgit2-1.9 (>= 1.9.0), libharfbuzz0b (>= 1.7.7), libicu76 (>= 76.1-1~), libopengl0, libpoppler-cpp2 (>= 25.03.0), libpugixml1v5 (>= 1.6), libsdl2-2.0-0 (>= 2.0.14), libstdc++6 (>= 14)
 Filename: ./es-de_3.4.1-aarch64.deb
-Size: 50723320
-MD5sum: 86c89a66293df2906d9f41e291740ce2
-SHA1: 0e6e850642e48babc9bd056c6984d4a0dd3eb64a
-SHA256: ef27408243ec010fbd17f860d85e72be1db7691577a5125433d2967da4806d99
+Size: 50723592
+MD5sum: 3ae791d59aeb07207655e6302ac13a9d
+SHA1: 34c6459eb9a73fd800793c36500771b601088d6b
+SHA256: 8f111e844244ab2826740e75c4d50a897ecbaccebf1ad1dffb3afbda87d66f1f
 Section: games
 Priority: optional
 Homepage: https://es-de.org
@@ -66,6 +66,40 @@ Priority: optional
 Homepage: https://github.com/Open-Wine-Components/umu-launcher
 Description: A tool for launching non-steam games with proton.
 
+Package: python3-umu-launcher
+Source: umu-launcher
+Version: 1.4.4-1
+Architecture: amd64
+Maintainer: Ward Nakchbandi <hotrod.master@hotmail.com>
+Installed-Size: 1314
+Depends: libc6 (>= 2.34), libgcc-s1 (>= 4.2), python3, python3-xlib (>= 0.33), apparmor-profiles, libgl1-mesa-dri:i386, libglx-mesa0:i386, python3-pyzstd, python3-xxhash, python3-truststore, python3-urllib3, python3-cbor2
+Filename: ./python3-umu-launcher_1.4.4-1_amd64_debian-13.deb
+Size: 360664
+MD5sum: 6ab11a7f2bd5a59b517a5a69b7ff2543
+SHA1: acfc7273c55567a96959ac38cce6456b0acaeb79
+SHA256: 602c4ac7210a54b835530f927b10c2781e51e294b1cf46448006e48fae66f232
+Section: python
+Priority: optional
+Homepage: https://github.com/Open-Wine-Components/umu-launcher
+Description: A tool for launching non-steam games with proton.
+
+Package: python3-umu-launcher
+Source: umu-launcher
+Version: 1.4.4-1
+Architecture: arm64
+Maintainer: Ward Nakchbandi <hotrod.master@hotmail.com>
+Installed-Size: 1226
+Depends: libc6 (>= 2.34), libgcc-s1 (>= 4.2), python3, python3-xlib (>= 0.33), apparmor-profiles, python3-pyzstd, python3-xxhash, python3-truststore, python3-urllib3, python3-cbor2
+Filename: ./python3-umu-launcher_1.4.4-1_arm64_debian-13.deb
+Size: 325616
+MD5sum: b95e1be75b91b34966b4c38d6bfe403d
+SHA1: 7535bc1d9d8f3e06eface86286556a3cfc0664e2
+SHA256: 3672ace172d232aab4280a241d4e2293428990d3c5bde692d41b75bd03ae9068
+Section: python
+Priority: optional
+Homepage: https://github.com/Open-Wine-Components/umu-launcher
+Description: A tool for launching non-steam games with proton.
+
 Package: umu-launcher
 Version: 1.4.1-1
 Architecture: all
@@ -79,6 +113,24 @@ Size: 12796
 MD5sum: 03a63b51962fc8442b5303c00398e690
 SHA1: b809c36a1a291ca7ec6ddc66248a26adefddae82
 SHA256: d7fe113580eded7ca03d97ca766627d80080828715259f91eae6964ee1c552f9
+Section: games
+Priority: optional
+Homepage: https://github.com/Open-Wine-Components/umu-launcher
+Description: A tool for launching non-steam games with proton.
+
+Package: umu-launcher
+Version: 1.4.4-1
+Architecture: all
+Maintainer: Ward Nakchbandi <hotrod.master@hotmail.com>
+Installed-Size: 42
+Depends: python3-umu-launcher (= 1.4.4-1)
+Recommends: fontconfig, fonts-liberation, libasound2-plugins, libegl1, libexpat1, libfontconfig1, libgbm1, libnm0, libsdl2-2.0-0, libusb-1.0-0, libva-drm2, libva-glx2, libx11-6, libx11-xcb1, libxau6, libxcb-dri2-0, libxcb-glx0, libxcb-present0, libxcb-sync1, libxdamage1, libxdmcp6, libxext6, libxfixes3, libxss1, libxxf86vm1, mesa-vulkan-drivers, steam-devices, va-driver-all | va-driver, xdg-desktop-portal, xdg-desktop-portal-gtk | xdg-desktop-portal-backend, xdg-utils, xterm | x-terminal-emulator, zenity
+Suggests: libudev0, nvidia-driver-libs, nvidia-vulkan-icd, pipewire
+Filename: ./umu-launcher_1.4.4-1_all_debian-13.deb
+Size: 12788
+MD5sum: e636984bfb9ccc1e293946cad9ead027
+SHA1: 51eae3df25048457f623efb7ce6ea23493bca36f
+SHA256: 11a22c8125787e861355bf93953783f61420840fae6e9c0fd43c28dc01e0a947
 Section: games
 Priority: optional
 Homepage: https://github.com/Open-Wine-Components/umu-launcher
