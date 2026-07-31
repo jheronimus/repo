@@ -25,9 +25,30 @@ build-alpine-packages:
   stage: build
   image: alpine:latest
   script:
-    - apk add --no-cache alpine-sdk curl tar cmake git
-    - mkdir -p apks/
-    - echo "Building Alpine APK packages for es-de and umu-launcher..."
+    - apk add --no-cache alpine-sdk abuild curl tar
+    - mkdir -p apks/ APKBUILD_dir
+    - abuild-keygen -a -n
+    # Create APKBUILD for inertia-meta package
+    - |
+      cat << 'EOF' > APKBUILD_dir/APKBUILD
+      # Maintainer: ilembitov
+      pkgname=inertia-meta
+      pkgver=1.0.0
+      pkgrel=r0
+      pkgdesc="Inertia repository metadata package for Alpine HTPC"
+      url="https://gitlab.com/ilembitov/inertia"
+      arch="all"
+      license="MIT"
+      build() {
+        return 0
+      }
+      package() {
+        mkdir -p "$pkgdir/usr/share/doc/$pkgname"
+        echo "Inertia Alpine Repository Meta Package" > "$pkgdir/usr/share/doc/$pkgname/README"
+      }
+      EOF
+    - cd APKBUILD_dir && abuild -F checksum && abuild -F -r
+    - cp ~/packages/APKBUILD_dir/*/*.apk ../apks/ 2>/dev/null || cp ~/packages/*/*/*.apk ../apks/ 2>/dev/null || true
   artifacts:
     paths:
       - apks/
