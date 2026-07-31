@@ -5,7 +5,7 @@ apk add --no-cache alpine-sdk abuild tar curl bash
 abuild-keygen -a -n
 cp /root/.abuild/*.rsa.pub /etc/apk/keys/
 
-mkdir -p public/alpine/v3.24/main/x86_64 APKBUILD_esde APKBUILD_umu
+mkdir -p public/alpine/v3.24/main/x86_64 public/alpine/v3.24/main/noarch APKBUILD_esde APKBUILD_umu
 
 cat << 'EOF' > APKBUILD_esde/APKBUILD
 # Maintainer: Ilya Ilembitov <ilembitov@users.noreply.github.com>
@@ -47,5 +47,8 @@ cd APKBUILD_esde && abuild -F checksum && abuild -F -r
 cd ../APKBUILD_umu && abuild -F checksum && abuild -F -r
 cd ..
 
-cp /root/packages/*/*/*.apk public/alpine/v3.24/main/x86_64/ 2>/dev/null || true
+find /root/packages/ -name "*.apk" -exec cp {} public/alpine/v3.24/main/x86_64/ \;
+find /root/packages/ -name "*.apk" -exec cp {} public/alpine/v3.24/main/noarch/ \;
+
 cd public/alpine/v3.24/main/x86_64 && apk index -o APKINDEX.tar.gz *.apk
+cd ../noarch && apk index -o APKINDEX.tar.gz *.apk
