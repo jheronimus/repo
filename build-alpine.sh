@@ -12,24 +12,35 @@ cat << 'EOF' > APKBUILD_esde/APKBUILD
 # Maintainer: Ilya Ilembitov <ilembitov@users.noreply.github.com>
 pkgname=es-de
 pkgver=3.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="EmulationStation Desktop Edition"
 url="https://es-de.org"
 arch="noarch"
 license="GPL-3.0-or-later"
 options="!check"
+source="org.es_de.frontend.png::https://gitlab.com/es-de/emulationstation-de/-/raw/master/resources/icons/org.es_de.frontend.png"
+
 package() {
-  mkdir -p "$pkgdir/usr/bin" "$pkgdir/usr/share/applications"
+  mkdir -p "$pkgdir/usr/bin" \
+           "$pkgdir/usr/share/applications" \
+           "$pkgdir/usr/share/icons/hicolor/256x256/apps" \
+           "$pkgdir/usr/share/pixmaps"
+
   echo "#!/bin/sh" > "$pkgdir/usr/bin/es-de"
   echo "echo ES-DE Launcher" >> "$pkgdir/usr/bin/es-de"
   chmod +x "$pkgdir/usr/bin/es-de"
+
+  install -m644 "$srcdir/org.es_de.frontend.png" "$pkgdir/usr/share/icons/hicolor/256x256/apps/org.es_de.frontend.png"
+  install -m644 "$srcdir/org.es_de.frontend.png" "$pkgdir/usr/share/icons/hicolor/256x256/apps/emulationstation.png"
+  install -m644 "$srcdir/org.es_de.frontend.png" "$pkgdir/usr/share/pixmaps/org.es_de.frontend.png"
+  install -m644 "$srcdir/org.es_de.frontend.png" "$pkgdir/usr/share/pixmaps/emulationstation.png"
 
   cat << 'DESKTOP' > "$pkgdir/usr/share/applications/org.es_de.frontend.desktop"
 [Desktop Entry]
 Name=ES-DE
 Comment=EmulationStation Desktop Edition
 Exec=/usr/bin/es-de
-Icon=emulationstation
+Icon=org.es_de.frontend
 Terminal=false
 Type=Application
 Categories=Game;Emulator;
