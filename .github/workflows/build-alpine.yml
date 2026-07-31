@@ -1,0 +1,37 @@
+name: Build and Deploy Alpine Repository
+
+on:
+  push:
+    branches:
+      - alpine
+  workflow_dispatch:
+
+jobs:
+  build-alpine-repo:
+    runs-on: ubuntu-latest
+    container:
+      image: alpine:latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Alpine Build Dependencies
+        run: |
+          apk add --no-cache alpine-sdk abuild tar curl bash
+
+      - name: Generate RSA Signing Key
+        run: |
+          abuild-keygen -a -n
+          cp /root/.abuild/*.rsa.pub /etc/apk/keys/
+
+      - name: Build APK Packages and Index
+        run: |
+          mkdir -p public/alpine/v3.24/main/x86_64
+          # Run apk index to generate valid signed APKINDEX.tar.gz
+          apk index -o public/alpine/v3.24/main/x86_64/APKINDEX.tar.gz
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
