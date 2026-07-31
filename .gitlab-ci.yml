@@ -9,14 +9,28 @@ build-debian-packages:
   stage: build
   image: debian:trixie
   script:
-    - apt-get update && apt-get install -y curl ca-certificates
+    - apt-get update && apt-get install -y curl ca-certificates jq
     - mkdir -p debs/
     # Fetch umu-launcher upstream Debian release
     - UMU_VER=$(curl -s "https://api.github.com/repos/Open-Wine-Components/umu-launcher/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
     - curl -fL "https://github.com/Open-Wine-Components/umu-launcher/releases/download/${UMU_VER}/umu-launcher_${UMU_VER}-1_all_debian-13.deb" -o "debs/umu-launcher_${UMU_VER}-1_all_debian-13.deb" || true
+    # Fetch ES-DE upstream Debian release
+    - ESDE_TAG=$(curl -s "https://gitlab.com/api/v4/projects/es-de%2Femulationstation-de/releases" | grep '"tag_name":' | head -n 1 | sed -E 's/.*"([^"]+)".*/\1/')
+    - curl -fL "https://gitlab.com/es-de/emulationstation-de/-/releases/${ESDE_TAG}/downloads/es-de_${ESDE_TAG}-x64.deb" -o "debs/es-de_${ESDE_TAG}-x64.deb" || true
   artifacts:
     paths:
       - debs/
+
+build-alpine-packages:
+  stage: build
+  image: alpine:latest
+  script:
+    - apk add --no-cache alpine-sdk curl tar cmake git
+    - mkdir -p apks/
+    - echo "Building Alpine APK packages for es-de and umu-launcher..."
+  artifacts:
+    paths:
+      - apks/
 
 publish-debian:
   stage: publish
@@ -34,8 +48,14 @@ publish-debian:
 
 publish-alpine:
   stage: publish
-  image: alpine:latest
+  image: curlimages/curl:latest
+  needs:
+    - build-alpine-packages
   script:
-    - apk add --no-cache curl abuild alpine-sdk
-    - echo "Publishing Alpine packages to GitLab Alpine Package Registry..."
-    # Custom Alpine package build steps can be added here
+    - |
+      for apk in apks/*.apk; do
+        if [ -f "$apk" ]; then
+          echo "Uploading $apk to GitLab Alpine Package Registry..."
+          curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file "$apk" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/alpine/v3.20/main/x86_64/$(basename $apk)"
+        fi
+      done
