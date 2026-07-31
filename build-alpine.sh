@@ -1,11 +1,12 @@
 #!/bin/sh
 set -e
 
-apk add --no-cache alpine-sdk abuild tar curl bash
+apk add --no-cache alpine-sdk abuild tar curl bash make g++
+
 abuild-keygen -a -n
 cp /root/.abuild/*.rsa.pub /etc/apk/keys/
 
-mkdir -p public/alpine/v3.24/main/x86_64 public/alpine/v3.24/main/noarch APKBUILD_esde APKBUILD_umu
+mkdir -p public/alpine/v3.24/main/x86_64 public/alpine/v3.24/main/noarch APKBUILD_esde APKBUILD_umu APKBUILD_unrar
 
 cat << 'EOF' > APKBUILD_esde/APKBUILD
 # Maintainer: Ilya Ilembitov <ilembitov@users.noreply.github.com>
@@ -43,8 +44,33 @@ package() {
 }
 EOF
 
+cat << 'EOF' > APKBUILD_unrar/APKBUILD
+# Maintainer: Ilya Ilembitov <ilembitov@users.noreply.github.com>
+pkgname=unrar
+pkgver=7.0.9
+pkgrel=0
+pkgdesc="Unrar utility for RAR archives"
+url="https://www.rarlab.com"
+arch="x86_64"
+license="freeware"
+options="!check"
+source="https://www.rarlab.com/rar/unrarsrc-${pkgver}.tar.gz"
+builddir="$srcdir/unrar"
+
+build() {
+  cd "$builddir"
+  make -f makefile
+}
+
+package() {
+  cd "$builddir"
+  install -Dm755 unrar "$pkgdir/usr/bin/unrar"
+}
+EOF
+
 cd APKBUILD_esde && abuild -F checksum && abuild -F -r
 cd ../APKBUILD_umu && abuild -F checksum && abuild -F -r
+cd ../APKBUILD_unrar && abuild -F checksum && abuild -F -r
 cd ..
 
 find /root/packages/ -name "*.apk" -exec cp {} public/alpine/v3.24/main/x86_64/ \;
