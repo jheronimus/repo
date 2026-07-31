@@ -1,0 +1,41 @@
+stages:
+  - build
+  - publish
+
+variables:
+  PROJECT_ID: $CI_PROJECT_ID
+
+build-debian-packages:
+  stage: build
+  image: debian:trixie
+  script:
+    - apt-get update && apt-get install -y curl ca-certificates
+    - mkdir -p debs/
+    # Fetch umu-launcher upstream Debian release
+    - UMU_VER=$(curl -s "https://api.github.com/repos/Open-Wine-Components/umu-launcher/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+    - curl -fL "https://github.com/Open-Wine-Components/umu-launcher/releases/download/${UMU_VER}/umu-launcher_${UMU_VER}-1_all_debian-13.deb" -o "debs/umu-launcher_${UMU_VER}-1_all_debian-13.deb" || true
+  artifacts:
+    paths:
+      - debs/
+
+publish-debian:
+  stage: publish
+  image: curlimages/curl:latest
+  needs:
+    - build-debian-packages
+  script:
+    - |
+      for deb in debs/*.deb; do
+        if [ -f "$deb" ]; then
+          echo "Uploading $deb to GitLab Debian Package Registry..."
+          curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file "$deb" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/debian/$(basename $deb)"
+        fi
+      done
+
+publish-alpine:
+  stage: publish
+  image: alpine:latest
+  script:
+    - apk add --no-cache curl abuild alpine-sdk
+    - echo "Publishing Alpine packages to GitLab Alpine Package Registry..."
+    # Placeholder script to generate/upload .apk packages to ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/alpine/
