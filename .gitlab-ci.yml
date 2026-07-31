@@ -31,7 +31,7 @@ build-alpine-packages:
     # Create APKBUILD for inertia-meta package
     - |
       cat << 'EOF' > APKBUILD_dir/APKBUILD
-      # Maintainer: ilembitov
+      # Maintainer: Ilya Ilembitov <ilembitov@users.noreply.gitlab.com>
       pkgname=inertia-meta
       pkgver=1.0.0
       pkgrel=0
