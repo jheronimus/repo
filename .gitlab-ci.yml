@@ -34,7 +34,7 @@ build-alpine-packages:
       # Maintainer: ilembitov
       pkgname=inertia-meta
       pkgver=1.0.0
-      pkgrel=r0
+      pkgrel=0
       pkgdesc="Inertia repository metadata package for Alpine HTPC"
       url="https://gitlab.com/ilembitov/inertia"
       arch="all"
