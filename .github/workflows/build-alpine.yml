@@ -6,6 +6,9 @@ on:
       - alpine
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build-alpine-repo:
     runs-on: ubuntu-latest
