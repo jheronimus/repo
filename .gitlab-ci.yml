@@ -79,6 +79,7 @@ publish-alpine:
       for apk in apks/*.apk; do
         if [ -f "$apk" ]; then
           echo "Uploading $apk to GitLab Alpine Package Registry..."
+          curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file "$apk" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/alpine/v3.24/main/x86_64/$(basename $apk)"
           curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file "$apk" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/alpine/v3.20/main/x86_64/$(basename $apk)"
         fi
       done
