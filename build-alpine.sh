@@ -12,17 +12,28 @@ cat << 'EOF' > APKBUILD_esde/APKBUILD
 # Maintainer: Ilya Ilembitov <ilembitov@users.noreply.github.com>
 pkgname=es-de
 pkgver=3.1.0
-pkgrel=0
+pkgrel=1
 pkgdesc="EmulationStation Desktop Edition"
 url="https://es-de.org"
 arch="noarch"
 license="GPL-3.0-or-later"
 options="!check"
 package() {
-  mkdir -p "$pkgdir/usr/bin"
+  mkdir -p "$pkgdir/usr/bin" "$pkgdir/usr/share/applications"
   echo "#!/bin/sh" > "$pkgdir/usr/bin/es-de"
   echo "echo ES-DE Launcher" >> "$pkgdir/usr/bin/es-de"
   chmod +x "$pkgdir/usr/bin/es-de"
+
+  cat << 'DESKTOP' > "$pkgdir/usr/share/applications/org.es_de.frontend.desktop"
+[Desktop Entry]
+Name=ES-DE
+Comment=EmulationStation Desktop Edition
+Exec=/usr/bin/es-de
+Icon=emulationstation
+Terminal=false
+Type=Application
+Categories=Game;Emulator;
+DESKTOP
 }
 EOF
 
