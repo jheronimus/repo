@@ -28,6 +28,7 @@ build-alpine-packages:
     - apk add --no-cache alpine-sdk abuild curl tar
     - mkdir -p apks/ APKBUILD_dir
     - abuild-keygen -a -n
+    - cp ~/.abuild/*.rsa.pub /etc/apk/keys/
     # Create APKBUILD for inertia-meta package
     - |
       cat << 'EOF' > APKBUILD_dir/APKBUILD
@@ -37,8 +38,9 @@ build-alpine-packages:
       pkgrel=0
       pkgdesc="Inertia repository metadata package for Alpine HTPC"
       url="https://gitlab.com/ilembitov/inertia"
-      arch="all"
+      arch="noarch"
       license="MIT"
+      options="!check"
       build() {
         return 0
       }
