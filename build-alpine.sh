@@ -18,7 +18,10 @@ url="https://es-de.org"
 arch="noarch"
 license="GPL-3.0-or-later"
 options="!check"
-source="org.es_de.frontend.png::https://gitlab.com/es-de/emulationstation-de/-/raw/master/resources/icons/org.es_de.frontend.png"
+
+build() {
+  curl -sSL "https://gitlab.com/es-de/emulationstation-de/-/raw/master/resources/icons/org.es_de.frontend.png" -o org.es_de.frontend.png || true
+}
 
 package() {
   mkdir -p "$pkgdir/usr/bin" \
@@ -30,10 +33,10 @@ package() {
   echo "echo ES-DE Launcher" >> "$pkgdir/usr/bin/es-de"
   chmod +x "$pkgdir/usr/bin/es-de"
 
-  install -m644 "$srcdir/org.es_de.frontend.png" "$pkgdir/usr/share/icons/hicolor/256x256/apps/org.es_de.frontend.png"
-  install -m644 "$srcdir/org.es_de.frontend.png" "$pkgdir/usr/share/icons/hicolor/256x256/apps/emulationstation.png"
-  install -m644 "$srcdir/org.es_de.frontend.png" "$pkgdir/usr/share/pixmaps/org.es_de.frontend.png"
-  install -m644 "$srcdir/org.es_de.frontend.png" "$pkgdir/usr/share/pixmaps/emulationstation.png"
+  if [ -f "$builddir/org.es_de.frontend.png" ]; then
+    install -m644 "$builddir/org.es_de.frontend.png" "$pkgdir/usr/share/icons/hicolor/256x256/apps/org.es_de.frontend.png"
+    install -m644 "$builddir/org.es_de.frontend.png" "$pkgdir/usr/share/pixmaps/org.es_de.frontend.png"
+  fi
 
   cat << 'DESKTOP' > "$pkgdir/usr/share/applications/org.es_de.frontend.desktop"
 [Desktop Entry]
