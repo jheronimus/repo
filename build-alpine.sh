@@ -2,14 +2,14 @@
 set -e
 
 apk update
-apk add --no-cache alpine-sdk abuild tar curl bash make g++ cmake
+apk add --no-cache alpine-sdk abuild tar curl bash make cmake
 
 # Use static key generated and committed to the repo
 mkdir -p /root/.abuild /etc/apk/keys
-cp jheronimus.rsa /root/.abuild/jheronimus.rsa
-cp jheronimus.rsa.pub /root/.abuild/jheronimus.rsa.pub
-cp jheronimus.rsa.pub /etc/apk/keys/jheronimus.rsa.pub
-echo 'PACKAGER_PRIVKEY="/root/.abuild/jheronimus.rsa"' > /etc/abuild.conf
+cp jheronimus-82bae039.rsa /root/.abuild/jheronimus-82bae039.rsa
+cp jheronimus-82bae039.rsa.pub /root/.abuild/jheronimus-82bae039.rsa.pub
+cp jheronimus-82bae039.rsa.pub /etc/apk/keys/jheronimus-82bae039.rsa.pub
+echo 'PACKAGER_PRIVKEY="/root/.abuild/jheronimus-82bae039.rsa"' > /etc/abuild.conf
 
 mkdir -p public/alpine/v3.24/main/x86_64 public/alpine/v3.24/main/noarch APKBUILD_esde APKBUILD_umu APKBUILD_unrar
 
@@ -90,8 +90,8 @@ find /root/packages/ -name "*.apk" -exec cp {} public/alpine/v3.24/main/x86_64/ 
 find /root/packages/ -name "*.apk" -exec cp {} public/alpine/v3.24/main/noarch/ \;
 
 # Export the public key to the web root so clients can download and trust it
-cp jheronimus.rsa.pub public/alpine/jheronimus.rsa.pub
+cp jheronimus-82bae039.rsa.pub public/alpine/jheronimus-82bae039.rsa.pub
 
-cd public/alpine/v3.24/main/x86_64 && apk index -o APKINDEX.tar.gz *.apk && abuild-sign -k /root/.abuild/jheronimus.rsa APKINDEX.tar.gz
-cd ../noarch && apk index -o APKINDEX.tar.gz *.apk && abuild-sign -k /root/.abuild/jheronimus.rsa APKINDEX.tar.gz
+cd public/alpine/v3.24/main/x86_64 && apk index -o APKINDEX.tar.gz *.apk && abuild-sign -k /root/.abuild/jheronimus-82bae039.rsa APKINDEX.tar.gz
+cd ../noarch && apk index -o APKINDEX.tar.gz *.apk && abuild-sign -k /root/.abuild/jheronimus-82bae039.rsa APKINDEX.tar.gz
 
