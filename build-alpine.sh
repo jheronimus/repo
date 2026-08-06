@@ -16,7 +16,7 @@ mkdir -p public/alpine/v3.24/main/x86_64 public/alpine/v3.24/main/noarch APKBUIL
 cat << 'EOF' > APKBUILD_esde/APKBUILD
 # Maintainer: Ilya Ilembitov <ilembitov@users.noreply.github.com>
 pkgname=es-de
-pkgver=3.1.0
+pkgver=3.4.1
 pkgrel=4
 pkgdesc="EmulationStation Desktop Edition"
 url="https://es-de.org"
