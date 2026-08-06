@@ -1,6 +1,7 @@
 #!/bin/sh
 set -e
 
+apk update
 apk add --no-cache alpine-sdk abuild tar curl bash make g++ cmake
 
 # Use static key generated and committed to the repo
@@ -21,7 +22,7 @@ pkgdesc="EmulationStation Desktop Edition"
 url="https://es-de.org"
 arch="x86_64 aarch64"
 license="MIT"
-makedepends="cmake g++ make curl-dev ffmpeg-dev freeimage-dev freetype-dev harfbuzz-dev icu-dev gettext-dev libgit2-dev pugixml-dev sdl2-dev alsa-lib-dev bluez-dev eudev-dev poppler-dev git"
+makedepends="cmake curl-dev ffmpeg-dev freeimage-dev freetype-dev harfbuzz-dev icu-dev gettext-dev libgit2-dev pugixml-dev sdl2-dev alsa-lib-dev bluez-dev eudev-dev poppler-dev"
 options="!check"
 source="${pkgname}-${pkgver}.tar.gz::https://gitlab.com/es-de/emulationstation-de/-/archive/v${pkgver}/emulationstation-de-v${pkgver}.tar.gz"
 
