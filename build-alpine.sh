@@ -4,6 +4,7 @@ set -e
 apk add --no-cache alpine-sdk abuild tar curl bash make g++ cmake
 
 # Use static key generated and committed to the repo
+mkdir -p /root/.abuild /etc/apk/keys
 cp jheronimus.rsa /root/.abuild/jheronimus.rsa
 cp jheronimus.rsa.pub /etc/apk/keys/jheronimus.rsa.pub
 echo 'PACKAGER_PRIVKEY="/root/.abuild/jheronimus.rsa"' > /etc/abuild.conf
