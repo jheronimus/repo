@@ -42,18 +42,19 @@ EOF
 cat << 'EOF' > APKBUILD_umu/APKBUILD
 # Maintainer: Ilya Ilembitov <ilembitov@users.noreply.github.com>
 pkgname=umu-launcher
-pkgver=1.1.0
-pkgrel=0
+pkgver=1.4.4
+pkgrel=1
 pkgdesc="Unified Launcher for Windows games via Proton"
 url="https://github.com/Open-Wine-Components/umu-launcher"
 arch="noarch"
 license="GPL-3.0-or-later"
+depends="python3"
 options="!check"
+source="https://github.com/Open-Wine-Components/umu-launcher/releases/download/${pkgver}/umu-launcher-${pkgver}-zipapp.tar"
+builddir="$srcdir/umu"
+
 package() {
-  mkdir -p "$pkgdir/usr/bin"
-  echo "#!/bin/sh" > "$pkgdir/usr/bin/umu-run"
-  echo "echo UMU Run Launcher" >> "$pkgdir/usr/bin/umu-run"
-  chmod +x "$pkgdir/usr/bin/umu-run"
+  install -Dm755 "$builddir/umu-run" "$pkgdir/usr/bin/umu-run"
 }
 EOF
 
