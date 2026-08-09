@@ -1,0 +1,33 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+Origin: jheronimus Custom Repository
+Label: jheronimus
+Suite: stable
+Codename: trixie
+Architectures: amd64 arm64
+Components: main
+Description: Unofficial ES-DE, VacuumTube, and umu-launcher repository for Debian Trixie
+Date: Sun, 09 Aug 2026 02:18:57 +0000
+MD5Sum:
+ a8b3eea025d89abba397af9e98a1b9ae 5958 Packages
+ ad82fbe5294ee2d3ce52c19324cc301e 2021 Packages.gz
+SHA256:
+ a0e6edeeac3554ee9abbed424c41222eb6d56a88f456987457018748b01b030e 5958 Packages
+ 6f4f7caf4b7fc1079fa2c2ee48cbc86c8d42a8971bf8e9c11d650f72e4c32ea6 2021 Packages.gz
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE1kpmD5KzND/e7RQNB0RhM03RhdYFAmp345EACgkQB0RhM03R
+hdbVWhAAnYHBn8YFw5BLakMVaiSN0DQnOMFryvkDIVjM5l9G0mAXxTnvz9PODx6l
+Upe+JFL5n9CEmQlNjc5n5WAscJXih7fNKSiBNEcEjTnqOvNuO5GdIM2munDWorYO
+Iiv3ZXAiIQq2hxDR+P+F0R7h0lV2I8h0UbwQ/Ai654JaVC1ihIO/gJdw3psEVEtO
+3yAyokDrhIsmuTygFhA6llNp7qsY7As9uLqrcbCcXZW9kq5zLMS01ZajD/eByx9F
+avgpCE0yQBNRhAV5M/NS39pgyo9ZD70Nv6Ogkee8JS82HRk4MVUS6qwbjfn51UQM
+EYjCO4zmzzGgJdXehoT92Mq6KhHd5AHD274/qWpcsjmG5ebEeWrZZjXcQPFnf2xD
+HxR8Q+N9ffsmh9m9KzVzvP8mhkopFc2h3lEqWpbVqqhAOKfa9gJR0aihnBszJY6B
+gHL9Brd4cm7xbHJmJUYJDXdaz54BwrxJdJoLZz+SRSS/PTKH/B1W/Q8JJ4YKHZ8o
+R3E1PCb/REEiCS0hSntE03nSYdXqzSSa54CB6Da1bmB64vUpFkXfarMB3XUofY4M
+E9EhVoH0R1pwm9zHlznSq/9oLWDYj1cdCXpc9T9uTugSVVJfj242E5pP0S1yJQ1j
+xoYcYKWQsZlKkRU6zoVmJ26nZe9+1bFAb8zHPXouhTatwoptq50=
+=TdfX
+-----END PGP SIGNATURE-----
