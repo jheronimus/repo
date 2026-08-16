@@ -1,5 +1,22 @@
 Package: es-de
 Version: 3.4.1
+Architecture: arm64
+Maintainer: Leon Styhre <leon.styhre@nw-soft.com>
+Installed-Size: 88963
+Depends: libasound2t64 (>= 1.0.16), libavcodec61 (>= 7:7.1.5), libavfilter10 (>= 7:7.1.5), libavformat61 (>= 7:7.1.5), libavutil59 (>= 7:7.1.5), libbluetooth3 (>= 4.91), libc6 (>= 2.38), libcurl4t64 (>= 7.68.0), libfreeimage3 (>= 3.18.0+ds2), libfreetype6 (>= 2.2.1), libgcc-s1 (>= 3.0), libgit2-1.9 (>= 1.9.0), libharfbuzz0b (>= 1.7.7), libicu76 (>= 76.1-1~), libopengl0, libpoppler-cpp2 (>= 25.03.0), libpugixml1v5 (>= 1.6), libsdl2-2.0-0 (>= 2.0.14), libstdc++6 (>= 14)
+Filename: ./es-de_3.4.1-aarch64.deb
+Size: 50723834
+MD5sum: fceffa4c3dbfd9c02aa75350fa4c8854
+SHA1: 5c3af23a90fdb2ce2ba5cc4bedd989a1d74176e6
+SHA256: b5fc0fa8441af7790d44c272cf283a840bfdb5208df765ce6f40c9d6b7c1eb45
+Section: games
+Priority: optional
+Homepage: https://es-de.org
+Description: Gaming frontend
+ ES-DE is a frontend for browsing and launching games from your multi-platform collection.
+
+Package: es-de
+Version: 3.4.1
 Architecture: amd64
 Maintainer: Leon Styhre <leon.styhre@nw-soft.com>
 Installed-Size: 90027
@@ -9,23 +26,6 @@ Size: 51125698
 MD5sum: 19239a376cba9a54270f2208f9d3e630
 SHA1: 90fbfd7c36d00e7bda2c35037436785f705c2dfe
 SHA256: a572c0c2b0c3c817f2909c9c93bf2b9f36562bad25664872ed6823f4e0d4d941
-Section: games
-Priority: optional
-Homepage: https://es-de.org
-Description: Gaming frontend
- ES-DE is a frontend for browsing and launching games from your multi-platform collection.
-
-Package: es-de
-Version: 3.4.1
-Architecture: arm64
-Maintainer: Leon Styhre <leon.styhre@nw-soft.com>
-Installed-Size: 88963
-Depends: libasound2t64 (>= 1.0.16), libavcodec61 (>= 7:7.1.5), libavfilter10 (>= 7:7.1.5), libavformat61 (>= 7:7.1.5), libavutil59 (>= 7:7.1.5), libbluetooth3 (>= 4.91), libc6 (>= 2.38), libcurl4t64 (>= 7.68.0), libfreeimage3 (>= 3.18.0+ds2), libfreetype6 (>= 2.2.1), libgcc-s1 (>= 3.0), libgit2-1.9 (>= 1.9.0), libharfbuzz0b (>= 1.7.7), libicu76 (>= 76.1-1~), libopengl0, libpoppler-cpp2 (>= 25.03.0), libpugixml1v5 (>= 1.6), libsdl2-2.0-0 (>= 2.0.14), libstdc++6 (>= 14)
-Filename: ./es-de_3.4.1-aarch64.deb
-Size: 50723690
-MD5sum: 9a61e557a6752ebb2ff915f5e65d62a5
-SHA1: a415f81d924f06e9ea202ed7e9e77b14c39299ee
-SHA256: f296113e81163974a9a69f3338e8a532d9029b9b029ae29ad5c0c90b3e0adbf7
 Section: games
 Priority: optional
 Homepage: https://es-de.org
@@ -86,26 +86,6 @@ Description: A tool for launching non-steam games with proton.
 
 Package: vacuumtube
 Version: 1.8.2
-Architecture: amd64
-Maintainer: shy@shy.rocks
-Installed-Size: 324803
-Depends: libgtk-3-0, libnotify4, libnss3, libxss1, libxtst6, xdg-utils, libatspi2.0-0, libuuid1, libsecret-1-0
-Recommends: libappindicator3-1
-Filename: ./vacuumtube_1.8.2_amd64.deb
-Size: 90496758
-MD5sum: 6c8b5985372ce49774a9bed5d0bbaa7c
-SHA1: 5fc28aaf5b22ee4b7854d85a0a53fe236f4837d5
-SHA256: 9da27e553b982985a3c2112eed3a0e819dd0c5492b72c8038d2fffcd58399fd5
-Section: default
-Priority: optional
-Homepage: https://github.com/shy1132/VacuumTube
-Description: Watch and explore videos on YouTube
-  YouTube for TV, on your PC
-License: MIT
-Vendor: shy@shy.rocks
-
-Package: vacuumtube
-Version: 1.8.2
 Architecture: arm64
 Maintainer: shy@shy.rocks
 Installed-Size: 323647
@@ -116,6 +96,26 @@ Size: 84372910
 MD5sum: 3d0cbd90b71654380b4cba6a393d5460
 SHA1: d23fe3940b08dd144e1b9a064604e0604c882eb2
 SHA256: a9ae98b72c49bc98e6d5fa71ff706eda2d39a3aa3bc5675cd7ab16d9e29cc309
+Section: default
+Priority: optional
+Homepage: https://github.com/shy1132/VacuumTube
+Description: Watch and explore videos on YouTube
+  YouTube for TV, on your PC
+License: MIT
+Vendor: shy@shy.rocks
+
+Package: vacuumtube
+Version: 1.8.2
+Architecture: amd64
+Maintainer: shy@shy.rocks
+Installed-Size: 324803
+Depends: libgtk-3-0, libnotify4, libnss3, libxss1, libxtst6, xdg-utils, libatspi2.0-0, libuuid1, libsecret-1-0
+Recommends: libappindicator3-1
+Filename: ./vacuumtube_1.8.2_amd64.deb
+Size: 90496758
+MD5sum: 6c8b5985372ce49774a9bed5d0bbaa7c
+SHA1: 5fc28aaf5b22ee4b7854d85a0a53fe236f4837d5
+SHA256: 9da27e553b982985a3c2112eed3a0e819dd0c5492b72c8038d2fffcd58399fd5
 Section: default
 Priority: optional
 Homepage: https://github.com/shy1132/VacuumTube
