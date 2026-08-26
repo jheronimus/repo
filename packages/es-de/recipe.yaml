@@ -1,0 +1,6 @@
+name: es-de
+type: build
+source: gitlab
+repo: es-de/emulationstation-de
+arch:
+  - x86_64

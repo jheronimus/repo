@@ -1,0 +1,6 @@
+public/
+.DS_Store
+*.apk
+src/
+pkg/
+distfiles/

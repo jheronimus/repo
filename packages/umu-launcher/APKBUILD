@@ -1,0 +1,19 @@
+# Maintainer: Ilya Ilembitov <ilembitov@users.noreply.github.com>
+pkgname=umu-launcher
+pkgver=1.4.4
+pkgrel=1
+pkgdesc="Unified Launcher for Windows games via Proton"
+url="https://github.com/Open-Wine-Components/umu-launcher"
+arch="noarch"
+license="GPL-3.0-or-later"
+depends="python3"
+options="!check"
+source="https://github.com/Open-Wine-Components/umu-launcher/releases/download/${pkgver}/umu-launcher-${pkgver}-zipapp.tar"
+builddir="$srcdir/umu"
+
+package() {
+  install -Dm755 "$builddir/umu-run" "$pkgdir/usr/bin/umu-run"
+}
+sha512sums="
+aa1688bc17c590f92be101d2846dd28e2c5cf28d642116e03fba68709e32925080d0087c278195f9ed66ef8cbd1d71a9d214259461ec26f08f3319e0b046476c  umu-launcher-1.4.4-zipapp.tar
+"

@@ -1,0 +1,56 @@
+name: Daily Alpine Repository Sync
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    # Run daily at midnight UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    inputs:
+      force_build:
+        description: "Force rebuild/refetch of all packages"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  sync-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Alpine Package Pipeline
+        env:
+          FORCE_BUILD: ${{ github.event.inputs.force_build || false }}
+        run: |
+          docker run --rm \
+            -e FORCE_BUILD="$FORCE_BUILD" \
+            -v "$(pwd)":/workspace -w /workspace \
+            alpine:latest sh scripts/build-all.sh
+
+      - name: Commit Upstream Version Bumps to Main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add packages/*/APKBUILD
+          if ! git diff --staged --quiet; then
+            git commit -m "chore(packages): auto-bump package versions from upstream"
+            git push origin main
+          else
+            echo "No package version bumps to commit."
+          fi
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          keep_files: true

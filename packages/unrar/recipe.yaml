@@ -1,0 +1,6 @@
+name: unrar
+type: build
+source: custom
+url: https://www.rarlab.com/rar_add.htm
+arch:
+  - x86_64

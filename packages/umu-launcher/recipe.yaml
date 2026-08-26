@@ -1,0 +1,6 @@
+name: umu-launcher
+type: build
+source: github
+repo: Open-Wine-Components/umu-launcher
+arch:
+  - noarch

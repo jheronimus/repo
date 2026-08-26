@@ -1,0 +1,26 @@
+# Maintainer: Ilya Ilembitov <ilembitov@users.noreply.github.com>
+pkgname=es-de
+pkgver=3.4.1
+pkgrel=4
+pkgdesc="EmulationStation Desktop Edition"
+url="https://es-de.org"
+arch="x86_64 aarch64"
+license="MIT"
+makedepends="cmake samurai curl-dev ffmpeg-dev freeimage-dev freetype-dev harfbuzz-dev icu-dev gettext-dev libgit2-dev pugixml-dev sdl2-dev alsa-lib-dev bluez-dev eudev-dev poppler-dev"
+options="!check"
+source="${pkgname}-${pkgver}.tar.gz::https://gitlab.com/es-de/emulationstation-de/-/archive/v${pkgver}/emulationstation-de-v${pkgver}.tar.gz"
+builddir="$srcdir/emulationstation-de-v${pkgver}"
+
+build() {
+  cmake -B build \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+}
+sha512sums="
+ae3e4fed60d9a5d32886090e9c29d2cadb724971a9b055425ed2dd60ee91fd1f03bbc19e1f523d8327c4c73c52fad29e73ddf81a4128d7da2e4bcd0df0cfab32  es-de-3.4.1.tar.gz
+"

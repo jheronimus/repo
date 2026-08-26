@@ -1,0 +1,24 @@
+# Maintainer: Ilya Ilembitov <ilembitov@users.noreply.github.com>
+pkgname=unrar
+pkgver=7.0.9
+pkgrel=0
+pkgdesc="Unrar utility for RAR archives"
+url="https://www.rarlab.com"
+arch="x86_64 aarch64"
+license="freeware"
+options="!check"
+source="https://www.rarlab.com/rar/unrarsrc-${pkgver}.tar.gz"
+builddir="$srcdir/unrar"
+
+build() {
+  cd "$builddir"
+  make -f makefile
+}
+
+package() {
+  cd "$builddir"
+  install -Dm755 unrar "$pkgdir/usr/bin/unrar"
+}
+sha512sums="
+4dff760bd69275dcd9bacac7a8fa9a6e68e2d047ea3775abc16a80d9a6e277b686153faafb1b711582d86eabfdf3254c601d9f585b28104dbd85ece4868876ed  unrarsrc-7.0.9.tar.gz
+"

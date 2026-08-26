@@ -1,0 +1,7 @@
+name: soft-serve
+type: fetch
+source: github
+repo: charmbracelet/soft-serve
+assets:
+  x86_64: "soft-serve_{version}_x86_64.apk"
+  aarch64: "soft-serve_{version}_aarch64.apk"
