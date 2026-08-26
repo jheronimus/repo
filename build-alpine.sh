@@ -2,7 +2,7 @@
 set -e
 
 apk update
-apk add --no-cache alpine-sdk abuild tar curl bash make cmake
+apk add --no-cache alpine-sdk abuild tar curl bash make cmake jq
 
 # Use static key generated and committed to the repo
 mkdir -p /root/.abuild /etc/apk/keys
@@ -11,7 +11,19 @@ cp jheronimus-82bae039.rsa.pub /root/.abuild/jheronimus-82bae039.rsa.pub
 cp jheronimus-82bae039.rsa.pub /etc/apk/keys/jheronimus-82bae039.rsa.pub
 echo 'PACKAGER_PRIVKEY="/root/.abuild/jheronimus-82bae039.rsa"' > /etc/abuild.conf
 
-mkdir -p public/alpine/v3.24/main/x86_64 public/alpine/v3.24/main/noarch APKBUILD_esde APKBUILD_umu APKBUILD_unrar
+mkdir -p public/alpine/v3.24/main/x86_64 public/alpine/v3.24/main/aarch64 public/alpine/v3.24/main/noarch APKBUILD_esde APKBUILD_umu APKBUILD_unrar
+
+# ─────────────────────────────────────────────────────────────
+# soft-serve: mirror upstream APKs (x86_64 + aarch64)
+# ─────────────────────────────────────────────────────────────
+if [ -z "$SOFTSERVE_VERSION" ]; then
+  SOFTSERVE_VERSION=$(curl -sSL https://api.github.com/repos/charmbracelet/soft-serve/releases/latest | jq -r .tag_name | sed 's/^v//')
+fi
+
+echo "Importing soft-serve v${SOFTSERVE_VERSION}..."
+SOFTSERVE_BASE="https://github.com/charmbracelet/soft-serve/releases/download/v${SOFTSERVE_VERSION}"
+curl -fSL "${SOFTSERVE_BASE}/soft-serve_${SOFTSERVE_VERSION}_x86_64.apk" -o "public/alpine/v3.24/main/x86_64/soft-serve_${SOFTSERVE_VERSION}_x86_64.apk" || echo "Warning: failed to download soft-serve x86_64 apk"
+curl -fSL "${SOFTSERVE_BASE}/soft-serve_${SOFTSERVE_VERSION}_aarch64.apk" -o "public/alpine/v3.24/main/aarch64/soft-serve_${SOFTSERVE_VERSION}_aarch64.apk" || echo "Warning: failed to download soft-serve aarch64 apk"
 
 cat << 'EOF' > APKBUILD_esde/APKBUILD
 # Maintainer: Ilya Ilembitov <ilembitov@users.noreply.github.com>
@@ -93,6 +105,12 @@ find /root/packages/ -name "*.apk" -exec cp {} public/alpine/v3.24/main/noarch/ 
 # Export the public key to the web root so clients can download and trust it
 cp jheronimus-82bae039.rsa.pub public/alpine/jheronimus-82bae039.rsa.pub
 
-cd public/alpine/v3.24/main/x86_64 && apk index -o APKINDEX.tar.gz *.apk && abuild-sign -k /root/.abuild/jheronimus-82bae039.rsa APKINDEX.tar.gz
-cd ../noarch && apk index -o APKINDEX.tar.gz *.apk && abuild-sign -k /root/.abuild/jheronimus-82bae039.rsa APKINDEX.tar.gz
+for dir in public/alpine/v3.24/main/*; do
+  if [ -d "$dir" ] && ls "$dir"/*.apk >/dev/null 2>&1; then
+    cd "$dir"
+    apk index --allow-untrusted -o APKINDEX.tar.gz *.apk
+    abuild-sign -k /root/.abuild/jheronimus-82bae039.rsa APKINDEX.tar.gz
+    cd - >/dev/null
+  fi
+done
 
