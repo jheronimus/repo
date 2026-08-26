@@ -22,8 +22,8 @@ fi
 
 echo "Importing soft-serve v${SOFTSERVE_VERSION}..."
 SOFTSERVE_BASE="https://github.com/charmbracelet/soft-serve/releases/download/v${SOFTSERVE_VERSION}"
-curl -fSL "${SOFTSERVE_BASE}/soft-serve_${SOFTSERVE_VERSION}_x86_64.apk" -o "public/alpine/v3.24/main/x86_64/soft-serve_${SOFTSERVE_VERSION}_x86_64.apk" || echo "Warning: failed to download soft-serve x86_64 apk"
-curl -fSL "${SOFTSERVE_BASE}/soft-serve_${SOFTSERVE_VERSION}_aarch64.apk" -o "public/alpine/v3.24/main/aarch64/soft-serve_${SOFTSERVE_VERSION}_aarch64.apk" || echo "Warning: failed to download soft-serve aarch64 apk"
+curl -fSL "${SOFTSERVE_BASE}/soft-serve_${SOFTSERVE_VERSION}_x86_64.apk" -o "public/alpine/v3.24/main/x86_64/soft-serve-${SOFTSERVE_VERSION}.apk" || echo "Warning: failed to download soft-serve x86_64 apk"
+curl -fSL "${SOFTSERVE_BASE}/soft-serve_${SOFTSERVE_VERSION}_aarch64.apk" -o "public/alpine/v3.24/main/aarch64/soft-serve-${SOFTSERVE_VERSION}.apk" || echo "Warning: failed to download soft-serve aarch64 apk"
 
 cat << 'EOF' > APKBUILD_esde/APKBUILD
 # Maintainer: Ilya Ilembitov <ilembitov@users.noreply.github.com>
